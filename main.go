@@ -7,16 +7,12 @@ import (
 	"fmt"
 	"github.com/joho/godotenv"
 	"io"
-	"log"
 	"net/http"
 	"os"
 )
 
 func main() {
-	err := godotenv.Load()
-	if err != nil {
-		log.Fatal("Error loading .env file")
-	}
+	godotenv.Load()
 
 	token := os.Getenv("TOKEN")
 
