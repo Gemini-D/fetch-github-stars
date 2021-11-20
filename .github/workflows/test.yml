@@ -21,7 +21,7 @@ jobs:
           go-version: ${{ matrix.go-version }}
       - name: Build Golang
         run: |
-          ll
+          ls
           go mod download
           go run build -o main main.go
       - name: Run Test
