@@ -1,0 +1,27 @@
+name: Test for Golang
+
+on: [ push, pull_request ]
+
+jobs:
+  unix-tests:
+    name: Test on ${{ matrix.os }} with PHP ${{ matrix.php-version }}
+    runs-on: '${{ matrix.os }}'
+    strategy:
+      matrix:
+        os: [ 'ubuntu-latest', 'macos-latest' ]
+        go-version: [ '^1.17' ]
+      max-parallel: 4
+      fail-fast: false
+    env:
+      setupphp_exts: igbinary, msgpack, redis
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Setup Golang
+        uses: actions/setup-go@v2
+        with:
+          go-version: ${{ go-version }}
+      - name: Build Golang
+        run: go run build -o main main.go
+      - name: Run
+        run: ./main hyperf/hyperf
