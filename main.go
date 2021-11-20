@@ -12,24 +12,36 @@ import (
 
 func main() {
 	var list []*repo.Repo
+	var repos = []string{
+		"hyperf/hyperf",
+		"easy-swoole/easyswoole",
+		"swoft-cloud/swoft",
+		"laravel/laravel",
+		"Yurunsoft/imi",
+		"hyperf/nano",
+		"hyperf/hyperf-docker",
+		"hyperf/hyperf-skeleton",
+	}
 
-	for i, v := range os.Args {
-		if i > 0 {
-			response, err := http.Get("https://api.github.com/repos/" + v)
-			if err != nil {
-				continue
-			}
+	if len(os.Args) > 1 {
+		repos = os.Args[1:]
+	}
 
-			body, _ := io.ReadAll(response.Body)
-			repo := new(repo.Repo)
-			err = json.Unmarshal(body, repo)
-			if err != nil {
-				fmt.Print(err)
-				continue
-			}
-
-			list = append(list, repo)
+	for _, v := range repos {
+		response, err := http.Get("https://api.github.com/repos/" + v)
+		if err != nil {
+			continue
 		}
+
+		body, _ := io.ReadAll(response.Body)
+		repo := new(repo.Repo)
+		err = json.Unmarshal(body, repo)
+		if err != nil {
+			fmt.Print(err)
+			continue
+		}
+
+		list = append(list, repo)
 	}
 
 	format.PrintTable(list)
