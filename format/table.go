@@ -2,11 +2,19 @@ package format
 
 import (
 	"Gemini-D/fetch-github-stars/repo"
+	"github.com/fatih/color"
 	"github.com/rodaine/table"
+	"sort"
 )
-import "github.com/fatih/color"
 
 func PrintTable(repos []*repo.Repo) {
+	sort.SliceStable(repos, func(i, j int) bool {
+		if repos[i].StargazersCount > repos[j].StargazersCount {
+			return true
+		}
+		return false
+	})
+
 	headerFmt := color.New(color.FgGreen, color.Underline).SprintfFunc()
 	columnFmt := color.New(color.FgYellow).SprintfFunc()
 
