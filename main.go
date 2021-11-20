@@ -5,12 +5,21 @@ import (
 	"Gemini-D/fetch-github-stars/repo"
 	"encoding/json"
 	"fmt"
+	"github.com/joho/godotenv"
 	"io"
+	"log"
 	"net/http"
 	"os"
 )
 
 func main() {
+	err := godotenv.Load()
+	if err != nil {
+		log.Fatal("Error loading .env file")
+	}
+
+	token := os.Getenv("TOKEN")
+
 	var list []*repo.Repo
 	var repos = []string{
 		"hyperf/hyperf",
@@ -28,7 +37,9 @@ func main() {
 	}
 
 	for _, v := range repos {
-		response, err := http.Get("https://api.github.com/repos/" + v)
+		request, _ := http.NewRequest("GET", "https://api.github.com/repos/"+v, nil)
+		request.Header.Set("Authorization", "Token "+token)
+		response, err := (&http.Client{}).Do(request)
 		if err != nil {
 			continue
 		}
